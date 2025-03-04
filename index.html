@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analog Watch with Numbers</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            margin: 0;
+        }
+
+        .watch {
+            width: 300px;
+            height: 300px;
+            border: 10px solid #fff;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .hand {
+            position: absolute;
+            background-color: #fff;
+            transform-origin: bottom center;
+            border-radius: 5px;
+        }
+
+        .hour-hand {
+            width: 8px;
+            height: 80px;
+            top: 70px;
+            left: 146px;
+            background-color: #ff6347;
+        }
+
+        .minute-hand {
+            width: 6px;
+            height: 120px;
+            top: 30px;
+            left: 147px;
+            background-color: #00ff00;
+        }
+
+        .second-hand {
+            width: 4px;
+            height: 140px;
+            top: 10px;
+            left: 148px;
+            background-color: #ff0000;
+        }
+
+        .center-circle {
+            width: 20px;
+            height: 20px;
+            background-color: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 140px;
+            left: 140px;
+        }
+
+        .number {
+            position: absolute;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            transform-origin: center;
+            text-align: center;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="watch">
+    <!-- Clock Hands -->
+    <div class="hand hour-hand" id="hour-hand"></div>
+    <div class="hand minute-hand" id="minute-hand"></div>
+    <div class="hand second-hand" id="second-hand"></div>
+    <div class="center-circle"></div>
+
+    <!-- Clock Numbers -->
+    <!-- Numbers 1 to 12 will be dynamically positioned -->
+</div>
+
+<script>
+    const hourHand = document.getElementById('hour-hand');
+    const minuteHand = document.getElementById('minute-hand');
+    const secondHand = document.getElementById('second-hand');
+    const watch = document.querySelector('.watch');
+
+    // Function to position numbers around the clock
+    function positionNumbers() {
+        const radius = 130; // Radius of the circle for number placement
+        const centerX = 150; // Center X of the watch
+        const centerY = 150; // Center Y of the watch
+
+        for (let i = 1; i <= 12; i++) {
+            const angle = (i * 30) * (Math.PI / 180); // Convert degrees to radians
+            const x = centerX + radius * Math.sin(angle) - 10; // Calculate X position
+            const y = centerY - radius * Math.cos(angle) - 10; // Calculate Y position
+
+            const number = document.createElement('div');
+            number.className = 'number';
+            number.textContent = i;
+            number.style.left = `${x}px`;
+            number.style.top = `${y}px`;
+            watch.appendChild(number);
+        }
+    }
+
+    // Function to update clock hands
+    function updateClock() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const seconds = now.getSeconds();
+
+        // Calculate degrees for each hand
+        const hourDegrees = (hours % 12) * 30 + (minutes / 2); // 30 degrees per hour + 0.5 degrees per minute
+        const minuteDegrees = minutes * 6 + (seconds / 10); // 6 degrees per minute + 0.1 degrees per second
+        const secondDegrees = seconds * 6; // 6 degrees per second
+
+        // Apply rotation to the hands
+        hourHand.style.transform = `rotate(${hourDegrees}deg)`;
+        minuteHand.style.transform = `rotate(${minuteDegrees}deg)`;
+        secondHand.style.transform = `rotate(${secondDegrees}deg)`;
+    }
+
+    // Position numbers on the clock
+    positionNumbers();
+
+    // Update the clock every second
+    setInterval(updateClock, 1000);
+
+    // Initialize the clock immediately
+    updateClock();
+</script>
+
+</body>
+</html>
